@@ -1,0 +1,28 @@
+{
+    "name": "imatic/config-bundle",
+    "type": "symfony-bundle",
+    "description": "Imatic Config Bundle",
+    "keywords": [],
+    "homepage": "http://imatic.cz",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "Stepan Koci",
+            "email": "stepan.koci@imatic.cz"
+        },
+        {
+            "name":"Imatic Software s.r.o.",
+            "homepage":"http://imatic.cz/"
+        }
+    ],
+    "require": {
+        "php":">=5.4"
+    },
+    "autoload": {
+        "psr-0": { "Imatic\\Bundle\\ConfigBundle": "" }
+    },
+    "target-dir": "Imatic/Bundle/ConfigBundle",
+    "minimum-stability": "dev",
+    "extra": {
+    }
+}
