@@ -1,2 +1,8 @@
 parameters:
 services:
+    imatic_config.entity.config_manager:
+        class: Imatic\Bundle\ConfigBundle\Entity\ConfigManager
+        arguments: [@doctrine.orm.entity_manager]
+
+    imatic_config.provider.chain_provider:
+        class: Imatic\Bundle\ConfigBundle\Provider\ChainProvider

@@ -1,0 +1,4 @@
+imatic_config:
+    resource: @ImaticConfigBundle/Controller
+    type: annotation
+    prefix: /

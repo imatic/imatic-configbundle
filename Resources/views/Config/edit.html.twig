@@ -1,0 +1,7 @@
+{% extends '::base.html.twig' %}
+
+{%  block action %}
+    <form action="" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+    </form>
+{% endblock %}
