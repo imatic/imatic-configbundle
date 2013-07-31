@@ -1,7 +1,38 @@
 {% extends '::base.html.twig' %}
 
-{%  block action %}
-    <form action="" {{ form_enctype(form) }}>
-        {{ form_widget(form) }}
+{% block action %}
+    <form method="POST" {{ form_enctype(form) }}>
+        {% block nav %}
+            <ul class="nav nav-tabs">
+                {% for name in groups|keys %}
+                    {% block link %}
+                        <li class="{{ {active: loop.first}|imatic_class }}">
+                            <a href="#{{ name|imatic_slug }}" data-toggle="tab">
+                                {{ name|trans({}, 'config_providers') }}
+                            </a>
+                        </li>
+                    {% endblock %}
+                {% endfor %}
+            </ul>
+        {% endblock %}
+        {% block content %}
+            <div class="tab-content">
+                {% for name, keys in groups %}
+                    {% block tabs %}
+                        <div id="{{ name|imatic_slug }}" class="tab-pane {{ {active: loop.first}|imatic_class }}">
+                            {% for key in keys %}
+                                {% block tab %}
+                                    {{ form_row(form[key]) }}
+                                {% endblock %}
+                            {% endfor %}
+                        </div>
+                    {% endblock %}
+                {% endfor %}
+            </div>
+        {% endblock %}
+        {% block button %}
+            <div><button class="btn btn-primary">{{ 'Save'|trans({}, 'ImaticConfigBundle') }}</button></div>
+        {% endblock %}
+        {{ form_rest(form) }}
     </form>
 {% endblock %}

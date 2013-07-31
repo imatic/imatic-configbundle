@@ -1,48 +1,53 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Entity;
 
-use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityRepository;
 
-/**
- * @method \Imatic\Bundle\ConfigBundle\Entity\Config find($id, $lockMode = LockMode::NONE, $lockVersion = null)
- * @method \Imatic\Bundle\ConfigBundle\Entity\Config findOneBy(array $criteria, array $orderBy = null)
- * @method \Imatic\Bundle\ConfigBundle\Entity\Config[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- **/
 class ConfigRepository extends EntityRepository
 {
     /**
+     * @param string $key
+     * @return Config
+     */
+    public function findOneByKey($key)
+    {
+        return $this->createQueryBuilder('c')
+            ->where('c.key = :key')
+            ->setParameter('key', $key)
+            ->getQuery()
+            ->useResultCache(true, null, $this->getCacheKey($key))
+            ->getOneOrNullResult()
+        ;
+    }
+
+    /**
+     * @param string|null $filter
      * @return Config[]
      */
-    public function findAll()
+    public function findByFilter($filter = null)
     {
-        return $this->_em
+        $queryBuilder = $this->_em
             ->createQueryBuilder()
             ->select('c')
             ->from($this->getClassName(), 'c', 'c.key')
-            ->getQuery()
-            ->getResult()
         ;
+
+        if ($filter !== null) {
+            $queryBuilder
+                ->where('c.key LIKE :pattern')
+                ->setParameter('pattern', "%{$filter}%")
+            ;
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
-//    /**
-//     * @param string|null $pattern
-//     * @return Config[]
-//     */
-//    public function findByPattern($pattern = null)
-//    {
-//        $queryBuilder = $this->_em
-//            ->createQueryBuilder()
-//            ->select('c')
-//            ->from($this->getClassName(), 'c', 'c.key')
-//        ;
-//
-//        if ($pattern !== null) {
-//            $queryBuilder
-//                ->where('c.key LIKE :pattern')
-//                ->setParameter('pattern', "%{$pattern}%")
-//            ;
-//        }
-//
-//        return $queryBuilder->getQuery()->getResult();
-//    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    public function getCacheKey($key)
+    {
+        return sprintf('%s.%s', $this->getClassName(), $key);
+    }
 }

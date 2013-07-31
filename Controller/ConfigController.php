@@ -1,10 +1,12 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Controller;
 
-use Imatic\Bundle\ConfigBundle\Entity\ConfigManager;
-use Imatic\Bundle\ConfigBundle\Provider\ChainProvider;
+use Imatic\Bundle\ConfigBundle\Manager\ConfigManager;
+use Imatic\Bundle\ConfigBundle\Provider\Definition;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration;
+use Symfony\Component\Form\Form;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -12,24 +14,63 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ConfigController extends Controller
 {
+    /** @var array */
+    private $groups;
+
     /**
+     * @param Request $request
+     * @return array
      * @Configuration\Route
      * @Configuration\Template
      */
-    public function editAction()
+    public function editAction(Request $request)
     {
-        //        $this->getConfigManager()->set('prc', 'mrdoprc')->set('soust', 'mrdosoust')->set('curakomrd', 'voprcosoust');
-        die(var_dump($this->getConfigManager()->get('prc')));
+        $configManager = $this->getConfigManager();
+        $form = $this->createConfigForm();
+        $form->handleRequest($request);
 
-        $formBuilder = $this->createFormBuilder(null, ['translation_domain' => 'ImaticConfigBundle']);
+        if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($form->getData() as $key => $value) {
+                $configManager->setValue($key, $value, false);
+            }
 
-        foreach ($this->getConfigProvider()->getNodes() as $node) {
-            $formBuilder->add($node->getKey(), $node->getType());
+            $this->getDoctrine()->getManager()->flush();
+
+            return $this->redirect($this->generateUrl('imatic_config_config_edit'));
         }
 
-        $formBuilder->add('submit', 'submit', ['attr' => ['class' => 'btn btn-primary']]);
+        return [
+            'groups' => $this->groups,
+            'form' => $form->createView()
+        ];
+    }
 
-        return ['form' => $formBuilder->getForm()->createView()];
+    /**
+     * @return Form
+     */
+    private function createConfigForm()
+    {
+        $configManager = $this->getConfigManager();
+        $formBuilder = $this->createFormBuilder();
+        $this->groups = [];
+
+        foreach ($configManager->getDefinitions() as $name => $definitions) {
+            foreach ($definitions as $definition) {
+                /* @var $definition Definition */
+                $key = sprintf('%s.%s', $name, $definition->getKey());
+                $child = strtr($key, '.', ':');
+                $formBuilder->add($child, $definition->getType(), $definition->getOptions() + [
+                    'label' => ' ' . $key,
+                    'help_inline' => $key,
+                    'translation_domain' => 'config',
+                    'property_path' => sprintf('[%s]', $key),
+                    'data' => $configManager->getValue($key)
+                ]);
+                $this->groups[$name][] = $child;
+            }
+        }
+
+        return $formBuilder->getForm();
     }
 
     /**
@@ -37,14 +78,6 @@ class ConfigController extends Controller
      */
     private function getConfigManager()
     {
-        return $this->get('imatic_config.entity.config_manager');
-    }
-
-    /**
-     * @return ChainProvider
-     */
-    private function getConfigProvider()
-    {
-        return $this->get('imatic_config.provider.chain_provider');
+        return $this->get('imatic_config.manager.config_manager');
     }
 }

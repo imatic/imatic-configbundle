@@ -17,7 +17,7 @@ class Config
 
     /**
      * @var string
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      */
     private $value;
 
@@ -67,13 +67,5 @@ class Config
         $this->value = $value;
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->value;
     }
 }

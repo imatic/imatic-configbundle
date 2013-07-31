@@ -1,7 +1,7 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Provider;
 
-class Node
+class Definition
 {
     /** @var string */
     private $key;
@@ -12,16 +12,21 @@ class Node
     /** @var mixed */
     private $default;
 
+    /** @var array */
+    private $options;
+
     /**
      * @param string $key
      * @param string $type
      * @param mixed $default
+     * @param array $options
      */
-    public function __construct($key, $type = 'text', $default = null)
+    public function __construct($key, $type = 'text', $default = null, array $options = [])
     {
         $this->type = (string) $type;
         $this->key = (string) $key;
         $this->default = $default;
+        $this->options = $options;
     }
 
     /**
@@ -46,5 +51,13 @@ class Node
     public function getDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options + ['required' => $this->default !== null];
     }
 }

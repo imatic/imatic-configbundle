@@ -4,7 +4,7 @@ namespace Imatic\Bundle\ConfigBundle\Provider;
 interface ProviderInterface
 {
     /**
-     * @return Node[]
+     * @return Definition[]
      */
-    public function getNodes();
+    public function getDefinitions();
 }
