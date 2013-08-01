@@ -20,7 +20,7 @@ class ConfigManager implements ConfigManagerInterface
     private $repository;
 
     /** @var ProviderInterface[] */
-    private $providers;
+    private $providers = [];
 
     /** @var array */
     private $definitions;
