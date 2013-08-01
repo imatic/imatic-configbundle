@@ -28,6 +28,11 @@ abstract class ConfigCommandTestCase extends \PHPUnit_Framework_TestCase
     protected $commandTester;
 
     /**
+     * @return ContainerAwareCommand
+     */
+    abstract protected function createCommand();
+
+    /**
      * {@inheritDoc}
      */
     protected function setUp()
@@ -117,9 +122,4 @@ abstract class ConfigCommandTestCase extends \PHPUnit_Framework_TestCase
 
         return $translatorMock;
     }
-
-    /**
-     * @return ContainerAwareCommand
-     */
-    abstract protected function createCommand();
 }
