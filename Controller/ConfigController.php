@@ -55,13 +55,12 @@ class ConfigController extends Controller
         $this->groups = [];
 
         foreach ($configManager->getDefinitions() as $name => $definitions) {
-            foreach ($definitions as $definition) {
+            foreach ($definitions as $key => $definition) {
                 /* @var $definition Definition */
-                $key = sprintf('%s.%s', $name, $definition->getKey());
                 $child = strtr($key, '.', ':');
                 $formBuilder->add($child, $definition->getType(), $definition->getOptions() + [
                     'label' => ' ' . $key,
-                    'help_inline' => $key,
+                    'help_label' => $key,
                     'translation_domain' => 'config',
                     'property_path' => sprintf('[%s]', $key),
                     'data' => $configManager->getValue($key)

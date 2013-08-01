@@ -1,1 +1,3 @@
-Save: Uložit
+form:
+    submit: Uložit
+    errors: Formulář nebyl správně vyplněn.

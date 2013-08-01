@@ -21,12 +21,24 @@ class Definition
      * @param mixed $default
      * @param array $options
      */
-    public function __construct($key, $type = 'text', $default = null, array $options = [])
+    public function __construct($key, $type, $default, array $options)
     {
         $this->type = (string) $type;
         $this->key = (string) $key;
         $this->default = $default;
         $this->options = $options;
+    }
+
+    /**
+     * @param string $key
+     * @param string $type
+     * @param mixed $default
+     * @param array $options
+     * @return Definition
+     */
+    public static function create($key, $type = 'text', $default = null, array $options = [])
+    {
+        return new self($key, $type, $default, $options);
     }
 
     /**
@@ -54,10 +66,32 @@ class Definition
     }
 
     /**
+     * @param $default
+     * @return $this
+     */
+    public function setDefault($default)
+    {
+        $this->default = $default;
+
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getOptions()
     {
-        return $this->options + ['required' => $this->default !== null];
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     * @return $this
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
+
+        return $this;
     }
 }

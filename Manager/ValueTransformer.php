@@ -3,6 +3,7 @@ namespace Imatic\Bundle\ConfigBundle\Manager;
 
 use Imatic\Bundle\ConfigBundle\Exception\InvalidValueException;
 use Imatic\Bundle\ConfigBundle\Provider\Definition;
+use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -63,10 +64,17 @@ class ValueTransformer
      * @param array $options
      * @param mixed $value
      * @return Form
+     * @throws InvalidValueException
      */
     private function createForm($type, array $options, $value = null)
     {
-        return $this->formFactory->create($type, $value, $options);
+        try {
+            $form = $this->formFactory->create($type, $value, $options);
+        } catch (TransformationFailedException $e) {
+            throw new InvalidValueException($e->getMessage());
+        }
+
+        return $form;
     }
 
     /**

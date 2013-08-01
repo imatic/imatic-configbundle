@@ -108,11 +108,9 @@ class ConfigManager implements ConfigManagerInterface
         $configs = $this->repository->findByFilter($filter);
         $data = [];
 
-        foreach ($this->getDefinitions() as $name => $definitions) {
-            foreach ($definitions as $definition) {
+        foreach ($this->getDefinitions() as $definitions) {
+            foreach ($definitions as $key => $definition) {
                 /* @var $definition Definition */
-                $key = sprintf('%s.%s', $name, $definition->getKey());
-
                 if ($filter === null || strpos($key, $filter) !== false) {
                     $data[$key] = isset($configs[$key])
                         ? $configs[$key]->getValue()
@@ -142,7 +140,7 @@ class ConfigManager implements ConfigManagerInterface
     public function getDefinition($key)
     {
         $this->getDefinitions();
-        list($name, $key) = explode('.', $key, 2) + [null, null];
+        list($name, ) = explode('.', $key, 2);
 
         if (!isset($this->definitions[$name][$key])) {
             throw new InvalidKeyException($key);
@@ -161,7 +159,7 @@ class ConfigManager implements ConfigManagerInterface
 
             foreach ($this->providers as $name => $provider) {
                 foreach ($provider->getDefinitions() as $definition) {
-                    $this->definitions[$name][$definition->getKey()] = $definition;
+                    $this->definitions[$name][sprintf('%s.%s', $name, $definition->getKey())] = $definition;
                 }
             }
         }

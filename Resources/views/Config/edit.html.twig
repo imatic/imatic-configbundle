@@ -1,7 +1,15 @@
 {% extends '::base.html.twig' %}
 
 {% block action %}
-    <form method="POST" {{ form_enctype(form) }}>
+    <form method="POST" {{ form_enctype(form) }} novalidate>
+        {% block errors %}
+            {% if not form.vars.valid %}
+                <p class="alert alert-danger">
+                    <button data-dismiss="alert" class="close" type="button">×</button>
+                    {{ 'form.errors'|trans({}, 'ImaticConfigBundle') }}
+                </p>
+            {% endif %}
+        {% endblock %}
         {% block nav %}
             <ul class="nav nav-tabs">
                 {% for name in groups|keys %}
@@ -31,7 +39,7 @@
             </div>
         {% endblock %}
         {% block button %}
-            <div><button class="btn btn-primary">{{ 'Save'|trans({}, 'ImaticConfigBundle') }}</button></div>
+            <div><button class="btn btn-primary">{{ 'form.submit'|trans({}, 'ImaticConfigBundle') }}</button></div>
         {% endblock %}
         {{ form_rest(form) }}
     </form>
