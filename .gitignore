@@ -1,8 +1,10 @@
 /vendor/
 /build/
 /build.local
+/composer.lock
+
 /.idea/
 /nbproject/
-/composer.lock
+
 .DS_Store
 Thumbs.db
