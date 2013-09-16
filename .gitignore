@@ -1,7 +1,7 @@
 /vendor/
 /build/
-/build.local
 /composer.lock
+/build.local
 
 /.idea/
 /nbproject/
