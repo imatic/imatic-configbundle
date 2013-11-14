@@ -1,7 +1,7 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Command;
 
-use Imatic\Bundle\ConfigBundle\Manager\ConfigManager;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,8 +18,7 @@ class ConfigSetCommand extends ContainerAwareCommand
             ->setName('imatic:config:set')
             ->setDescription('Sets a given config variable.')
             ->addArgument('key', InputArgument::REQUIRED)
-            ->addArgument('value', InputArgument::REQUIRED)
-        ;
+            ->addArgument('value', InputArgument::REQUIRED);
     }
 
     /**
@@ -38,6 +37,6 @@ class ConfigSetCommand extends ContainerAwareCommand
      */
     private function getConfigManager()
     {
-        return $this->getContainer()->get('imatic_config.manager.config_manager');
+        return $this->getContainer()->get('imatic_config.config_manager');
     }
 }

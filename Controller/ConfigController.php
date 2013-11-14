@@ -1,13 +1,12 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Controller;
 
-use Imatic\Bundle\ConfigBundle\Manager\ConfigManager;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
 use Imatic\Bundle\ConfigBundle\Provider\Definition;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * @Configuration\Route("/imatic/config/config")
@@ -59,12 +58,12 @@ class ConfigController extends Controller
                 /* @var $definition Definition */
                 $child = strtr($key, '.', ':');
                 $formBuilder->add($child, $definition->getType(), $definition->getOptions() + [
-                    'label' => ' ' . $key,
-                    'help_label' => $key,
-                    'translation_domain' => 'config',
-                    'property_path' => sprintf('[%s]', $key),
-                    'data' => $configManager->getValue($key)
-                ]);
+                        'label' => $key,
+                        'help_label' => $key,
+                        'translation_domain' => 'configuration',
+                        'property_path' => sprintf('[%s]', $key),
+                        'data' => $configManager->getValue($key)
+                    ]);
                 $this->groups[$name][] = $child;
             }
         }
@@ -77,6 +76,6 @@ class ConfigController extends Controller
      */
     private function getConfigManager()
     {
-        return $this->get('imatic_config.manager.config_manager');
+        return $this->get('imatic_config.config_manager');
     }
 }

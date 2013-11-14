@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Imatic Config Bundle",
     "keywords": [],
-    "homepage": "http://imatic.cz/",
+    "homepage": "http://imatic.cz",
     "license": "proprietary",
     "authors": [
         {

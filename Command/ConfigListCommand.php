@@ -1,7 +1,7 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Command;
 
-use Imatic\Bundle\ConfigBundle\Manager\ConfigManager;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\TableHelper;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,8 +19,7 @@ class ConfigListCommand extends ContainerAwareCommand
         $this
             ->setName('imatic:config:list')
             ->setDescription('Lists all available config variables.')
-            ->addArgument('filter', InputArgument::OPTIONAL, 'Filters valiable keys by the given filter.')
-        ;
+            ->addArgument('filter', InputArgument::OPTIONAL, 'Filters valiable keys by the given filter.');
     }
 
     /**
@@ -50,7 +49,7 @@ class ConfigListCommand extends ContainerAwareCommand
      */
     private function getConfigManager()
     {
-        return $this->getContainer()->get('imatic_config.manager.config_manager');
+        return $this->getContainer()->get('imatic_config.config_manager');
     }
 
     /**

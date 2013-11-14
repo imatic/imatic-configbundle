@@ -1,7 +1,7 @@
 <?php
-namespace Imatic\Bundle\ConfigBundle\Tests\Manager;
+namespace Imatic\Bundle\ConfigBundle\Tests\Config;
 
-use Imatic\Bundle\ConfigBundle\Manager\ValueTransformer;
+use Imatic\Bundle\ConfigBundle\Config\ValueTransformer;
 use Imatic\Bundle\ConfigBundle\Provider\Definition;
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Component\Form\Extension\Validator\ValidatorExtension;

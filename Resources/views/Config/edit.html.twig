@@ -16,7 +16,7 @@
                     {% block link %}
                         <li class="{{ {active: loop.first}|imatic_class }}">
                             <a href="#{{ name|imatic_slug }}" data-toggle="tab">
-                                {{ name|trans({}, 'config_providers') }}
+                                {{ name|trans({}, 'configuration_group') }}
                             </a>
                         </li>
                     {% endblock %}
@@ -39,7 +39,9 @@
             </div>
         {% endblock %}
         {% block button %}
-            <div><button class="btn btn-primary">{{ 'form.submit'|trans({}, 'ImaticConfigBundle') }}</button></div>
+            <div>
+                <button class="btn btn-primary">{{ 'form.submit'|trans({}, 'ImaticConfigBundle') }}</button>
+            </div>
         {% endblock %}
         {{ form_rest(form) }}
     </form>

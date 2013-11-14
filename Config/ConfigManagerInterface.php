@@ -1,20 +1,13 @@
 <?php
-namespace Imatic\Bundle\ConfigBundle\Manager;
+namespace Imatic\Bundle\ConfigBundle\Config;
 
-use Imatic\Bundle\ConfigBundle\Provider\Definition;
-use Imatic\Bundle\ConfigBundle\Provider\ProviderInterface;
 use Imatic\Bundle\ConfigBundle\Exception\InvalidKeyException;
 use Imatic\Bundle\ConfigBundle\Exception\InvalidValueException;
+use Imatic\Bundle\ConfigBundle\Provider\Definition;
+use Imatic\Bundle\ConfigBundle\Provider\ProviderInterface;
 
-interface ConfigManagerInterface
+interface ConfigManagerInterface extends ConfigReaderInterface
 {
-    /**
-     * @param string $key
-     * @return mixed
-     * @throw InvalidKeyException
-     */
-    public function getValue($key);
-
     /**
      * @param string $key
      * @param mixed $value
@@ -24,13 +17,6 @@ interface ConfigManagerInterface
      * @throws InvalidValueException
      */
     public function setValue($key, $value, $flush = true);
-
-    /**
-     * @param string $key
-     * @return mixed
-     * @throws InvalidKeyException
-     */
-    public function getViewValue($key);
 
     /**
      * @param string $key

@@ -23,8 +23,8 @@ class Definition
      */
     public function __construct($key, $type, $default, array $options)
     {
-        $this->type = (string) $type;
-        $this->key = (string) $key;
+        $this->type = (string)$type;
+        $this->key = (string)$key;
         $this->default = $default;
         $this->options = $options;
     }

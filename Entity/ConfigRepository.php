@@ -16,8 +16,7 @@ class ConfigRepository extends EntityRepository
             ->setParameter('key', $key)
             ->getQuery()
             ->useResultCache(true, null, $this->getCacheKey($key))
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 
     /**
@@ -29,14 +28,12 @@ class ConfigRepository extends EntityRepository
         $queryBuilder = $this->_em
             ->createQueryBuilder()
             ->select('c')
-            ->from($this->getClassName(), 'c', 'c.key')
-        ;
+            ->from($this->getClassName(), 'c', 'c.key');
 
         if ($filter !== null) {
             $queryBuilder
                 ->where('c.key LIKE :pattern')
-                ->setParameter('pattern', "%{$filter}%")
-            ;
+                ->setParameter('pattern', "%{$filter}%");
         }
 
         return $queryBuilder->getQuery()->getResult();

@@ -1,5 +1,5 @@
 <?php
-namespace Imatic\Bundle\ConfigBundle\Manager;
+namespace Imatic\Bundle\ConfigBundle\Config;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Imatic\Bundle\ConfigBundle\Entity\Config;
@@ -29,7 +29,8 @@ class ConfigManager implements ConfigManagerInterface
      * @param ObjectManager $objectManager
      * @param ValueTransformer $valueTransformer
      */
-    public function __construct(ObjectManager $objectManager, ValueTransformer $valueTransformer) {
+    public function __construct(ObjectManager $objectManager, ValueTransformer $valueTransformer)
+    {
         $this->valueTransformer = $valueTransformer;
         $this->objectManager = $objectManager;
         $this->repository = $objectManager->getRepository('ImaticConfigBundle:Config');
@@ -75,7 +76,7 @@ class ConfigManager implements ConfigManagerInterface
     public function setViewValue($key, $value, $flush = true)
     {
         $this->valueTransformer->reverseTransform($this->getDefinition($key), $value);
-        $config = $this->repository->findOneByKey($key) ?: new Config($key);
+        $config = $this->repository->findOneByKey($key) ? : new Config($key);
         $config->setValue($value);
         $this->objectManager->persist($config);
 
@@ -114,8 +115,7 @@ class ConfigManager implements ConfigManagerInterface
                 if ($filter === null || strpos($key, $filter) !== false) {
                     $data[$key] = isset($configs[$key])
                         ? $configs[$key]->getValue()
-                        : $this->valueTransformer->transform($definition, $definition->getDefault())
-                    ;
+                        : $this->valueTransformer->transform($definition, $definition->getDefault());
                 }
             }
         }
@@ -140,7 +140,7 @@ class ConfigManager implements ConfigManagerInterface
     public function getDefinition($key)
     {
         $this->getDefinitions();
-        list($name, ) = explode('.', $key, 2);
+        list($name,) = explode('.', $key, 2);
 
         if (!isset($this->definitions[$name][$key])) {
             throw new InvalidKeyException($key);

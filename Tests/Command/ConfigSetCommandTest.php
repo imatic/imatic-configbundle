@@ -32,12 +32,10 @@ class ConfigSetCommandTest extends ConfigCommandTestCase
         $objectManagerMock
             ->expects($this->once())
             ->method('persist')
-            ->with(new Config('config.foo', 'foo'))
-        ;
+            ->with(new Config('config.foo', 'foo'));
         $objectManagerMock
             ->expects($this->once())
-            ->method('flush')
-        ;
+            ->method('flush');
 
         return $objectManagerMock;
     }

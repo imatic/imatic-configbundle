@@ -12,7 +12,7 @@ class CompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $definition = $container->getDefinition('imatic_config.manager.config_manager');
+        $definition = $container->getDefinition('imatic_config.config_manager');
 
         foreach ($container->findTaggedServiceIds('imatic_config.provider') as $id => $parameters) {
             $definition->addMethodCall('registerProvider', [

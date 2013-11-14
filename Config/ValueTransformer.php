@@ -1,12 +1,12 @@
 <?php
-namespace Imatic\Bundle\ConfigBundle\Manager;
+namespace Imatic\Bundle\ConfigBundle\Config;
 
 use Imatic\Bundle\ConfigBundle\Exception\InvalidValueException;
 use Imatic\Bundle\ConfigBundle\Provider\Definition;
 use Symfony\Component\Form\Exception\TransformationFailedException;
 use Symfony\Component\Form\Form;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 
 class ValueTransformer
 {
@@ -16,7 +16,8 @@ class ValueTransformer
     /**
      * @param FormFactoryInterface $formFactory
      */
-    public function __construct(FormFactoryInterface $formFactory) {
+    public function __construct(FormFactoryInterface $formFactory)
+    {
         $this->formFactory = $formFactory;
     }
 

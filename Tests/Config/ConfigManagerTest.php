@@ -1,11 +1,11 @@
 <?php
-namespace Imatic\Bundle\ConfigBundle\Tests\Manager;
+namespace Imatic\Bundle\ConfigBundle\Tests\Config;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Imatic\Bundle\ConfigBundle\Entity\Config;
 use Imatic\Bundle\ConfigBundle\Entity\ConfigRepository;
-use Imatic\Bundle\ConfigBundle\Manager\ConfigManager;
-use Imatic\Bundle\ConfigBundle\Manager\ValueTransformer;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
+use Imatic\Bundle\ConfigBundle\Config\ValueTransformer;
 use Imatic\Bundle\ConfigBundle\Tests\Fixtures\Provider\ConfigProvider;
 use Symfony\Component\Form\Extension\Core\CoreExtension;
 use Symfony\Component\Form\FormFactory;
@@ -52,8 +52,7 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->objectManagerMock
             ->expects($this->exactly(2))
-            ->method('flush')
-        ;
+            ->method('flush');
         $this->configManager->setValue('config.foo', 'value');
         $this->assertEquals('value', $this->configManager->getValue('config.foo'));
         $this->configManager->setValue('config.baz', new \DateTime('1970-02-01'));
@@ -70,8 +69,7 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->objectManagerMock
             ->expects($this->exactly(2))
-            ->method('flush')
-        ;
+            ->method('flush');
         $this->configManager->setViewValue('config.foo', 'value');
         $this->assertEquals('value', $this->configManager->getValue('config.foo'));
         $this->configManager->setViewValue('config.baz', '1970-02-01');
@@ -132,8 +130,7 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getRepository')
             ->with('ImaticConfigBundle:Config')
-            ->will($this->returnValue($this->createConfigRepositoryMock()))
-        ;
+            ->will($this->returnValue($this->createConfigRepositoryMock()));
 
         return $objectManagerMock;
     }
@@ -146,24 +143,21 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
         $configRepositoryMock = $this
             ->getMockBuilder('Imatic\Bundle\ConfigBundle\Entity\ConfigRepository')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
         $configRepositoryMock
             ->expects($this->any())
             ->method('findOneByKey')
             ->will($this->returnValueMap([
                 ['config.foo', new Config('config.foo', 'foo')],
                 ['config.baz', new Config('config.baz')]
-            ]))
-        ;
+            ]));
         $configRepositoryMock
             ->expects($this->any())
             ->method('findByFilter')
             ->will($this->returnValueMap([
                 ['config', ['config.foo' => new Config('config.foo', 'foo')]],
                 ['foo', ['config.foo' => new Config('config.foo', 'foo')]],
-            ]))
-        ;
+            ]));
 
         return $configRepositoryMock;
     }

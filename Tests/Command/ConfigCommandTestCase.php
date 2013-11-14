@@ -3,8 +3,8 @@ namespace Imatic\Bundle\ConfigBundle\Tests\Command;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Imatic\Bundle\ConfigBundle\Entity\ConfigRepository;
-use Imatic\Bundle\ConfigBundle\Manager\ConfigManager;
-use Imatic\Bundle\ConfigBundle\Manager\ValueTransformer;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
+use Imatic\Bundle\ConfigBundle\Config\ValueTransformer;
 use Imatic\Bundle\ConfigBundle\Tests\Fixtures\Provider\ConfigProvider;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Application;
@@ -58,8 +58,7 @@ abstract class ConfigCommandTestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('getRepository')
             ->with('ImaticConfigBundle:Config')
-            ->will($this->returnValue($this->createConfigRepositoryMock()))
-        ;
+            ->will($this->returnValue($this->createConfigRepositoryMock()));
 
         return $objectManagerMock;
     }
@@ -88,10 +87,9 @@ abstract class ConfigCommandTestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->any())
             ->method('get')
             ->will($this->returnValueMap([
-                ['imatic_config.manager.config_manager', $invalidBehavior, $this->configManager],
+                ['imatic_config.config_manager', $invalidBehavior, $this->configManager],
                 ['translator', $invalidBehavior, $this->createTranslatorMock()]
-            ]))
-        ;
+            ]));
 
         return $containerMock;
     }
@@ -104,8 +102,7 @@ abstract class ConfigCommandTestCase extends \PHPUnit_Framework_TestCase
         return $this
             ->getMockBuilder('Imatic\Bundle\ConfigBundle\Entity\ConfigRepository')
             ->disableOriginalConstructor()
-            ->getMock()
-        ;
+            ->getMock();
     }
 
     /**
@@ -117,8 +114,7 @@ abstract class ConfigCommandTestCase extends \PHPUnit_Framework_TestCase
         $translatorMock
             ->expects($this->any())
             ->method('trans')
-            ->will($this->returnArgument(0))
-        ;
+            ->will($this->returnArgument(0));
 
         return $translatorMock;
     }
