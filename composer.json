@@ -18,12 +18,19 @@
     "require": {
         "php": ">=5.4",
         "doctrine/orm": ">=2.2.3,<2.5-dev",
-        "symfony/symfony": "~2.3"
+        "symfony/symfony": "~2.4"
     },
     "autoload": {
-        "psr-0": {"Imatic\\Bundle\\ConfigBundle": ""}
+        "psr-0": {
+            "Imatic\\Bundle\\ConfigBundle": ""
+        }
     },
     "target-dir": "Imatic/Bundle/ConfigBundle",
     "minimum-stability": "dev",
-    "extra": {}
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.4.x-dev"
+        }
+    },
+    "require-dev": []
 }
