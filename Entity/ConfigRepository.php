@@ -7,16 +7,21 @@ class ConfigRepository extends EntityRepository
 {
     /**
      * @param string $key
+     * @param bool   $useResultCache
      * @return Config
      */
-    public function findOneByKey($key)
+    public function findOneByKey($key, $useResultCache = true)
     {
-        return $this->createQueryBuilder('c')
+        $query = $this->createQueryBuilder('c')
             ->where('c.key = :key')
             ->setParameter('key', $key)
-            ->getQuery()
-            ->useResultCache(true, null, $this->getCacheKey($key))
-            ->getOneOrNullResult();
+            ->getQuery();
+
+        if ($useResultCache) {
+            $query->useResultCache(true, null, $this->getCacheKey($key));
+        }
+
+        return $query->getOneOrNullResult();
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 namespace Imatic\Bundle\ConfigBundle\Config;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use Imatic\Bundle\ConfigBundle\Entity\Config;
 use Imatic\Bundle\ConfigBundle\Entity\ConfigRepository;
 use Imatic\Bundle\ConfigBundle\Exception\InvalidKeyException;
@@ -13,8 +13,8 @@ class ConfigManager implements ConfigManagerInterface
     /** @var ValueTransformer */
     private $valueTransformer;
 
-    /** @var ObjectManager */
-    private $objectManager;
+    /** @var EntityManager */
+    private $em;
 
     /** @var ConfigRepository */
     private $repository;
@@ -26,14 +26,14 @@ class ConfigManager implements ConfigManagerInterface
     private $definitions;
 
     /**
-     * @param ObjectManager $objectManager
+     * @param EntityManager $em
      * @param ValueTransformer $valueTransformer
      */
-    public function __construct(ObjectManager $objectManager, ValueTransformer $valueTransformer)
+    public function __construct(EntityManager $em, ValueTransformer $valueTransformer)
     {
+        $this->em = $em;
         $this->valueTransformer = $valueTransformer;
-        $this->objectManager = $objectManager;
-        $this->repository = $objectManager->getRepository('ImaticConfigBundle:Config');
+        $this->repository = $em->getRepository('ImaticConfigBundle:Config');
     }
 
     /**
@@ -75,16 +75,32 @@ class ConfigManager implements ConfigManagerInterface
      */
     public function setViewValue($key, $value, $flush = true)
     {
+        $this->invalidateResultCache($key);
+
         $this->valueTransformer->reverseTransform($this->getDefinition($key), $value);
-        $config = $this->repository->findOneByKey($key) ? : new Config($key);
+        $config = $this->repository->findOneByKey($key, false) ? : new Config($key);
         $config->setValue($value);
-        $this->objectManager->persist($config);
+        $this->em->persist($config);
 
         if ($flush) {
-            $this->objectManager->flush();
+            $this->em->flush();
         }
 
         return $this;
+    }
+
+
+    /**
+     * @param string $key
+     */
+    protected function invalidateResultCache($key)
+    {
+        $this
+            ->em
+            ->getConfiguration()
+            ->getResultCacheImpl()
+            ->delete($this->repository->getCacheKey($key))
+        ;
     }
 
     /**
