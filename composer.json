@@ -3,7 +3,7 @@
     "type": "symfony-bundle",
     "description": "Imatic Config Bundle",
     "keywords": [],
-    "homepage": "http://imatic.cz",
+    "homepage": "https://www.imatic.cz",
     "license": "proprietary",
     "authors": [
         {
@@ -12,25 +12,40 @@
         },
         {
             "name": "Imatic Software s.r.o.",
-            "homepage": "http://imatic.cz/"
+            "homepage": "https://www.imatic.cz"
         }
     ],
     "require": {
-        "php": ">=5.4",
-        "doctrine/orm": ">=2.2.3,<2.5-dev",
-        "symfony/symfony": "~2.6"
+        "php": "^7.4",
+        "ext-json": "*",
+        "doctrine/doctrine-bundle": "^2.4",
+        "doctrine/orm": "^2.7",
+        "symfony/form": "4.4|^5.3",
+        "symfony/framework-bundle": "^4.4|^5.3",
+        "symfony/translation": "^4.4|^5.3"
+    },
+    "require-dev": {
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "friendsofphp/php-cs-fixer": "^3.2",
+        "imatic/testing": "^6.0",
+        "symfony/browser-kit": "^4.4|^5.3",
+        "symfony/phpunit-bridge": "^4.4|^5.3",
+        "symfony/security-bundle": "^4.4|^5.3",
+        "symfony/twig-bundle": "^4.4|^5.3",
+        "symfony/validator": "^4.4|^5.3",
+        "symfony/yaml": "^4.4|^5.3"
     },
     "autoload": {
-        "psr-0": {
-            "Imatic\\Bundle\\ConfigBundle": ""
-        }
+        "psr-4": {
+            "Imatic\\Bundle\\ConfigBundle\\": ""
+        },
+        "exclude-from-classmap": [
+            "Tests/"
+        ]
     },
-    "target-dir": "Imatic/Bundle/ConfigBundle",
+    "config": {
+        "sort-packages": true
+    },
     "minimum-stability": "dev",
-    "extra": {
-        "branch-alias": {
-            "dev-master": "2.6.x-dev"
-        }
-    },
-    "require-dev": []
+    "prefer-stable": true
 }

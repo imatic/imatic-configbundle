@@ -1,58 +1,46 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Provider;
+
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class Definition
 {
-    /** @var string */
-    private $key;
+    private string $key;
 
-    /** @var string */
-    private $type;
-
-    /** @var mixed */
-    private $default;
-
-    /** @var array */
-    private $options;
+    private string $type;
 
     /**
-     * @param string $key
-     * @param string $type
-     * @param mixed $default
-     * @param array $options
+     * @var mixed
      */
-    public function __construct($key, $type, $default, array $options)
+    private $default;
+
+    private array $options;
+
+    /**
+     * @param mixed $default
+     */
+    public function __construct(string $key, string $type, $default = null, array $options = [])
     {
-        $this->type = (string)$type;
-        $this->key = (string)$key;
+        $this->type = $type;
+        $this->key = $key;
         $this->default = $default;
         $this->options = $options;
     }
 
     /**
-     * @param string $key
-     * @param string $type
      * @param mixed $default
-     * @param array $options
-     * @return Definition
      */
-    public static function create($key, $type = 'text', $default = null, array $options = [])
+    public static function create(string $key, string $type = TextType::class, $default = null, array $options = []): self
     {
         return new self($key, $type, $default, $options);
     }
 
-    /**
-     * @return string
-     */
-    public function getKey()
+    public function getKey(): string
     {
         return $this->key;
     }
 
-    /**
-     * @return string
-     */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -66,29 +54,21 @@ class Definition
     }
 
     /**
-     * @param $default
-     * @return $this
+     * @param mixed $default
      */
-    public function setDefault($default)
+    public function setDefault($default): self
     {
         $this->default = $default;
 
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
 
-    /**
-     * @param array $options
-     * @return $this
-     */
-    public function setOptions(array $options)
+    public function setOptions(array $options): self
     {
         $this->options = $options;
 

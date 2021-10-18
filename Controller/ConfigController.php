@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Controller;
 
 use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
@@ -18,6 +18,7 @@ class ConfigController extends Controller
 
     /**
      * @param Request $request
+     *
      * @return array
      * @Configuration\Route
      * @Configuration\Template
@@ -40,7 +41,7 @@ class ConfigController extends Controller
 
         return [
             'groups' => $this->groups,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ];
     }
 
@@ -62,7 +63,7 @@ class ConfigController extends Controller
                         'help_label' => $key,
                         'translation_domain' => 'configuration',
                         'property_path' => sprintf('[%s]', $key),
-                        'data' => $configManager->getValue($key)
+                        'data' => $configManager->getValue($key),
                     ]);
                 $this->groups[$name][] = $child;
             }

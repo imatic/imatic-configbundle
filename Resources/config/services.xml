@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="imatic_config.get_command" class="Imatic\Bundle\ConfigBundle\Command\ConfigGetCommand">
+            <argument type="service" id="imatic_config.config_manager" />
+
+            <tag name="console.command" command="imatic:config:get" />
+        </service>
+
+        <service id="imatic_config.list_command" class="Imatic\Bundle\ConfigBundle\Command\ConfigListCommand">
+            <argument type="service" id="imatic_config.config_manager" />
+            <argument type="service" id="translator" />
+
+            <tag name="console.command" command="imatic:config:list" />
+        </service>
+
+        <service id="imatic_config.set_command" class="Imatic\Bundle\ConfigBundle\Command\ConfigSetCommand">
+            <argument type="service" id="imatic_config.config_manager" />
+
+            <tag name="console.command" command="imatic:config:set" />
+        </service>
+
+        <service id="imatic_config.config_manager" class="Imatic\Bundle\ConfigBundle\Config\ConfigManager" public="false">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="imatic_config.value_transformer" />
+        </service>
+
+        <service id="Imatic\Bundle\ConfigBundle\Config\ConfigManagerInterface" alias="imatic_config.config_manager" public="false"/>
+
+        <service id="imatic_config.value_transformer" class="Imatic\Bundle\ConfigBundle\Config\ValueTransformer" public="false">
+            <argument type="service" id="form.factory" />
+        </service>
+    </services>
+</container>

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Config;
 
 use Imatic\Bundle\ConfigBundle\Exception\InvalidKeyException;
@@ -9,53 +9,40 @@ use Imatic\Bundle\ConfigBundle\Provider\ProviderInterface;
 interface ConfigManagerInterface extends ConfigReaderInterface
 {
     /**
-     * @param string $key
      * @param mixed $value
-     * @param bool $flush
-     * @return $this
+     *
      * @throws InvalidKeyException
      * @throws InvalidValueException
      */
-    public function setValue($key, $value, $flush = true);
+    public function setValue(string $key, $value, bool $flush = true);
 
     /**
-     * @param string $key
      * @param scalar $value
-     * @param bool $flush
-     * @return $this
+     *
      * @throws InvalidKeyException
      * @throws InvalidValueException
      */
-    public function setViewValue($key, $value, $flush = true);
+    public function setViewValue(string $key, $value, bool $flush = true);
 
     /**
-     * @return array
      * @throws InvalidValueException
      */
-    public function getValues();
+    public function getValues(?string $filter = null): array;
 
     /**
-     * @return array
      * @throws InvalidValueException
      */
-    public function getViewValues();
+    public function getViewValues(?string $filter = null): array;
+
+    public function registerProvider(ProviderInterface $provider, string $name);
 
     /**
-     * @param ProviderInterface $provider
-     * @param string $name
-     * @return $this
-     */
-    public function registerProvider(ProviderInterface $provider, $name);
-
-    /**
-     * @param string $key
-     * @return Definition
      * @throws InvalidKeyException
      */
-    public function getDefinition($key);
+    public function getDefinition(string $key): Definition;
 
     /**
-     * @return array
+     * @return Definition[]
      */
-    public function getDefinitions();
+    public function getDefinitions(): array;
 }

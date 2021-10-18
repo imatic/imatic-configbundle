@@ -1,19 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<phpunit
-        backupGlobals="false"
-        backupStaticAttributes="false"
-        colors="true"
-        convertErrorsToExceptions="true"
-        convertNoticesToExceptions="true"
-        convertWarningsToExceptions="true"
-        processIsolation="false"
-        stopOnFailure="false"
-        syntaxCheck="false"
-        bootstrap="vendor/autoload.php"
+
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         colors="true"
+         bootstrap="Tests/bootstrap.php"
 >
+    <php>
+        <env name="KERNEL_CLASS" value="Imatic\Bundle\ConfigBundle\Tests\Fixtures\TestProject\TestKernel"/>
+        <env name="DATABASE_URL" value="pgsql://postgres:postgres@127.0.0.1:5432/config_bundle_test"/>
+        <env name="DATABASE_VERSION" value="13.4"/>
+        <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
+        <env name="TESTING_DATA_INIT" value="1"/>
+    </php>
+
     <testsuites>
         <testsuite name="Imatic Config Bundle">
-            <directory>./Tests</directory>
+            <directory>./Tests/</directory>
         </testsuite>
     </testsuites>
+
+    <coverage>
+        <include>
+            <directory>./</directory>
+        </include>
+        <exclude>
+            <directory>./Tests</directory>
+            <directory>./vendor</directory>
+        </exclude>
+    </coverage>
+
+    <listeners>
+        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
+    </listeners>
 </phpunit>

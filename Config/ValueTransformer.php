@@ -1,30 +1,26 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Config;
 
 use Imatic\Bundle\ConfigBundle\Exception\InvalidValueException;
 use Imatic\Bundle\ConfigBundle\Provider\Definition;
 use Symfony\Component\Form\Exception\TransformationFailedException;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 
 class ValueTransformer
 {
-    /** @var FormFactoryInterface */
-    private $formFactory;
+    private FormFactoryInterface $formFactory;
 
-    /**
-     * @param FormFactoryInterface $formFactory
-     */
     public function __construct(FormFactoryInterface $formFactory)
     {
         $this->formFactory = $formFactory;
     }
 
     /**
-     * @param Definition $definition
      * @param mixed $value
+     *
      * @return scalar
+     *
      * @throws InvalidValueException
      */
     public function transform(Definition $definition, $value)
@@ -46,9 +42,10 @@ class ValueTransformer
     }
 
     /**
-     * @param Definition $definition
      * @param scalar $value
+     *
      * @return mixed
+     *
      * @throws InvalidValueException
      */
     public function reverseTransform(Definition $definition, $value)
@@ -61,13 +58,11 @@ class ValueTransformer
     }
 
     /**
-     * @param string $type
-     * @param array $options
      * @param mixed $value
-     * @return Form
+     *
      * @throws InvalidValueException
      */
-    private function createForm($type, array $options, $value = null)
+    private function createForm(string $type, array $options = [], $value = null): FormInterface
     {
         try {
             $form = $this->formFactory->create($type, $value, $options);
@@ -79,7 +74,6 @@ class ValueTransformer
     }
 
     /**
-     * @param FormInterface $form
      * @throws InvalidValueException
      */
     private function validateForm(FormInterface $form)

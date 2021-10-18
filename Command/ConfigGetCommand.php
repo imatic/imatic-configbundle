@@ -1,17 +1,23 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Command;
 
-use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigGetCommand extends ContainerAwareCommand
+class ConfigGetCommand extends Command
 {
-    /**
-     * {@inheritDoc}
-     */
+    private ConfigManagerInterface $configManager;
+
+    public function __construct(ConfigManagerInterface $configManager)
+    {
+        $this->configManager = $configManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -20,19 +26,10 @@ class ConfigGetCommand extends ContainerAwareCommand
             ->addArgument('key', InputArgument::REQUIRED);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->write($this->getConfigManager()->getViewValue($input->getArgument('key')));
-    }
+        $output->write($this->configManager->getViewValue($input->getArgument('key')));
 
-    /**
-     * @return ConfigManager
-     */
-    private function getConfigManager()
-    {
-        return $this->getContainer()->get('imatic_config.config_manager');
+        return 0;
     }
 }

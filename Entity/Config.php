@@ -1,68 +1,48 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="ConfigRepository")
+ * @ORM\Entity(repositoryClass=ConfigRepository::class)
  */
 class Config
 {
     /**
-     * @var string
      * @ORM\Id
      * @ORM\Column(type="string")
      */
-    private $key;
+    private ?string $key;
 
     /**
-     * @var string
      * @ORM\Column(type="text", nullable=true)
      */
-    private $value;
+    private ?string $value;
 
-    /**
-     * @param string|null $key
-     * @param string|null $value
-     */
-    public function __construct($key = null, $value = null)
+    public function __construct(string $key = null, string $value = null)
     {
         $this->key = $key;
         $this->value = $value;
     }
 
-    /**
-     * @return string
-     */
-    public function getKey()
+    public function getKey(): ?string
     {
         return $this->key;
     }
 
-    /**
-     * @param string $key
-     * @return $this
-     */
-    public function setKey($key)
+    public function setKey(?string $key): self
     {
         $this->key = $key;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getValue()
+    public function getValue(): ?string
     {
         return $this->value;
     }
 
-    /**
-     * @param string $value
-     * @return $this
-     */
-    public function setValue($value)
+    public function setValue(?string $value): self
     {
         $this->value = $value;
 

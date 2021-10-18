@@ -1,7 +1,18 @@
+Tests/Fixtures/TestProject/var
 /vendor/
-/build/
-/build.local
-/.idea/
-/nbproject/
+
+# tmp etc
 .DS_Store
 Thumbs.db
+
+#ide
+/.idea/
+/nbproject/
+
+# friendsofphp/php-cs-fixer
+/.php-cs-fixer.php
+/.php-cs-fixer.cache
+
+# phpunit/phpunit
+/phpunit.xml
+.phpunit.result.cache
