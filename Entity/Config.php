@@ -4,7 +4,7 @@ namespace Imatic\Bundle\ConfigBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ConfigRepository::class)
+ * @ORM\MappedSuperclass(repositoryClass=ConfigRepository::class)
  */
 class Config
 {

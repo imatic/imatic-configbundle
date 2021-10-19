@@ -1,7 +1,8 @@
 <?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @method Config|null find($id, $lockMode = null, $lockVersion = null)
@@ -9,8 +10,13 @@ use Doctrine\ORM\EntityRepository;
  * @method Config[]    findAll()
  * @method Config[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ConfigRepository extends EntityRepository
+class ConfigRepository extends ServiceEntityRepository
 {
+    public function __construct(ManagerRegistry $registry, string $entityClass)
+    {
+        parent::__construct($registry, $entityClass);
+    }
+
     public function findOneByKey(string $key, bool $enableResultCache = true): ?Config
     {
         $query = $this->createQueryBuilder('c')

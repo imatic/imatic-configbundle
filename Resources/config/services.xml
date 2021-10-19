@@ -34,5 +34,12 @@
         <service id="imatic_config.value_transformer" class="Imatic\Bundle\ConfigBundle\Config\ValueTransformer" public="false">
             <argument type="service" id="form.factory" />
         </service>
+
+        <service id="Imatic\Bundle\ConfigBundle\Entity\ConfigRepository">
+            <argument type="service" id="doctrine" />
+            <argument></argument>
+
+            <tag name="doctrine.repository_service" />
+        </service>
     </services>
 </container>

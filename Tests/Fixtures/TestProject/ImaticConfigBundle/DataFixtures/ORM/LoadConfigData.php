@@ -3,7 +3,7 @@ namespace Imatic\Bundle\ConfigBundle\Tests\Fixtures\TestProject\ImaticConfigBund
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Imatic\Bundle\ConfigBundle\Entity\Config;
+use Imatic\Bundle\ConfigBundle\Tests\Fixtures\TestProject\ImaticConfigBundle\Entity\Config;
 
 class LoadConfigData extends Fixture
 {
