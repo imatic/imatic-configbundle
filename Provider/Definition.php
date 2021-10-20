@@ -19,7 +19,7 @@ class Definition
     /**
      * @param mixed $default
      */
-    public function __construct(string $key, string $type, $default = null, array $options = [])
+    public function __construct(string $key, string $type = TextType::class, $default = null, array $options = [])
     {
         $this->type = $type;
         $this->key = $key;

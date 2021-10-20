@@ -63,8 +63,10 @@ class ConfigManager implements ConfigManagerInterface
     {
         $this->invalidateResultCache($key);
 
+        $className = $this->repository->getClassName();
+
         $this->valueTransformer->reverseTransform($this->getDefinition($key), $value);
-        $config = $this->repository->findOneByKey($key, false) ?: new Config($key);
+        $config = $this->repository->findOneByKey($key, false) ?: new $className($key);
         $config->setValue($value);
         $this->em->persist($config);
 
