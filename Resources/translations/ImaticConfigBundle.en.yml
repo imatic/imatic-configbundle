@@ -1,3 +1,4 @@
+Configuration: Configuration
+
 form:
     submit: Save
-    errors: The form was not filled in correctly.

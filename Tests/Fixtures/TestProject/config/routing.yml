@@ -1,0 +1,3 @@
+imatic_config:
+    resource: '@ImaticConfigBundle/Resources/config/routing.xml'
+    prefix: /

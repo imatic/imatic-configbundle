@@ -5,6 +5,16 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="imatic_config.config_controller" class="Imatic\Bundle\ConfigBundle\Controller\ConfigController">
+            <argument type="service" id="imatic_config.config_manager" />
+            <argument type="service" id="form.factory" />
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="router" />
+            <argument type="service" id="twig" />
+        </service>
+
+        <service id="Imatic\Bundle\ConfigBundle\Controller\ConfigController" alias="imatic_config.config_controller" public="true" />
+
         <service id="imatic_config.get_command" class="Imatic\Bundle\ConfigBundle\Command\ConfigGetCommand">
             <argument type="service" id="imatic_config.config_manager" />
 
