@@ -14,6 +14,12 @@ class Configuration implements ConfigurationInterface
         $treeBuilder->getRootNode()
             ->children()
                 ->scalarNode('entity_class')->defaultValue(Config::class)->cannotBeEmpty()->end()
+                ->arrayNode('templates')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->scalarNode('base')->defaultValue('base.html.twig')->cannotBeEmpty()->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;
