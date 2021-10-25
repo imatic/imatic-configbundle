@@ -5,6 +5,14 @@ use Imatic\Bundle\ConfigBundle\Tests\Fixtures\TestProject\WebTestCase;
 
 class ConfigControllerTest extends WebTestCase
 {
+    public function testGetValue()
+    {
+        $this->client->request('GET', '/config/get');
+
+        $this->assertResponseIsSuccessful();
+        $this->assertSelectorTextContains('p', 'foo');
+    }
+
     public function testEdit()
     {
         $this->client->request('GET', '/config');

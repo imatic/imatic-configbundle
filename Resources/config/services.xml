@@ -51,5 +51,16 @@
 
             <tag name="doctrine.repository_service" />
         </service>
+
+        <!-- Twig extensions -->
+        <service id="Imatic\Bundle\ConfigBundle\Twig\ImaticConfigExtension">
+            <tag name="twig.extension" />
+        </service>
+
+        <service id="Imatic\Bundle\ConfigBundle\Twig\ImaticConfigRuntime">
+            <argument type="service" id="imatic_config.config_manager" />
+
+            <tag name="twig.runtime" />
+        </service>
     </services>
 </container>
