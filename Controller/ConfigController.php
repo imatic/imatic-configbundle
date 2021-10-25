@@ -1,81 +1,85 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Controller;
 
-use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
-use Imatic\Bundle\ConfigBundle\Provider\Definition;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\Form;
+use Doctrine\ORM\EntityManagerInterface;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\RouterInterface;
+use Twig\Environment;
 
-/**
- * @Configuration\Route("/imatic/config/config")
- */
-class ConfigController extends Controller
+class ConfigController
 {
-    /** @var array */
-    private $groups;
+    private ConfigManagerInterface $configManager;
 
-    /**
-     * @param Request $request
-     * @return array
-     * @Configuration\Route
-     * @Configuration\Template
-     */
-    public function editAction(Request $request)
+    private FormFactoryInterface $formFactory;
+
+    private EntityManagerInterface $manager;
+
+    private RouterInterface $router;
+
+    private Environment $twig;
+
+    private array $groups = [];
+
+    public function __construct(ConfigManagerInterface $configManager, FormFactoryInterface $formFactory, EntityManagerInterface $manager, RouterInterface $router, Environment $twig)
     {
-        $configManager = $this->getConfigManager();
+        $this->configManager = $configManager;
+        $this->formFactory = $formFactory;
+        $this->manager = $manager;
+        $this->router = $router;
+        $this->twig = $twig;
+    }
+
+    public function edit(Request $request): Response
+    {
         $form = $this->createConfigForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             foreach ($form->getData() as $key => $value) {
-                $configManager->setValue($key, $value, false);
+                $this->configManager->setValue($key, $value, false);
             }
 
-            $this->getDoctrine()->getManager()->flush();
+            $this->manager->flush();
 
-            return $this->redirect($this->generateUrl('imatic_config_config_edit'));
+            return new RedirectResponse($this->router->generate('imatic_config_config'));
         }
 
-        return [
+        return new Response($this->twig->render('@ImaticConfig/Config/edit.html.twig', [
             'groups' => $this->groups,
-            'form' => $form->createView()
-        ];
+            'form' => $form->createView(),
+        ]));
     }
 
-    /**
-     * @return Form
-     */
-    private function createConfigForm()
+    private function createConfigForm(): FormInterface
     {
-        $configManager = $this->getConfigManager();
-        $formBuilder = $this->createFormBuilder();
-        $this->groups = [];
+        $formBuilder = $this->formFactory->createBuilder();
 
-        foreach ($configManager->getDefinitions() as $name => $definitions) {
+        foreach ($this->configManager->getDefinitions() as $name => $definitions) {
             foreach ($definitions as $key => $definition) {
-                /* @var $definition Definition */
                 $child = strtr($key, '.', ':');
+
                 $formBuilder->add($child, $definition->getType(), $definition->getOptions() + [
                         'label' => $key,
-                        'help_label' => $key,
                         'translation_domain' => 'configuration',
                         'property_path' => sprintf('[%s]', $key),
-                        'data' => $configManager->getValue($key)
+                        'data' => $this->configManager->getValue($key),
                     ]);
+
                 $this->groups[$name][] = $child;
             }
         }
 
-        return $formBuilder->getForm();
-    }
+        $formBuilder->add('submit', SubmitType::class, [
+            'label' => 'form.submit',
+            'translation_domain' => 'ImaticConfigBundle',
+        ]);
 
-    /**
-     * @return ConfigManager
-     */
-    private function getConfigManager()
-    {
-        return $this->get('imatic_config.config_manager');
+        return $formBuilder->getForm();
     }
 }

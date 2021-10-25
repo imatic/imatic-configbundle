@@ -1,5 +1,4 @@
-<?php
-
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Config;
 
 use Imatic\Bundle\ConfigBundle\Exception\InvalidKeyException;
@@ -7,16 +6,16 @@ use Imatic\Bundle\ConfigBundle\Exception\InvalidKeyException;
 interface ConfigReaderInterface
 {
     /**
-     * @param string $key
      * @return mixed
+     *
      * @throw InvalidKeyException
      */
-    public function getValue($key);
+    public function getValue(string $key);
 
     /**
-     * @param string $key
      * @return mixed
+     *
      * @throws InvalidKeyException
      */
-    public function getViewValue($key);
+    public function getViewValue(string $key);
 }

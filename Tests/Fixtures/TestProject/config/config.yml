@@ -1,0 +1,50 @@
+parameters:
+    env(DATABASE_URL): ''
+    env(DATABASE_VERSION): '9.2.4'
+    env(TESTING_DATA_INIT): '1'
+
+    testing.data_init: '%env(TESTING_DATA_INIT)%'
+
+framework:
+    secret:                     test
+    test: ~
+    session:
+        storage_id:             session.storage.filesystem
+    form:                       true
+    csrf_protection:            true
+    validation:
+        enabled:                true
+        enable_annotations:     true
+    translator:
+        enabled:                true
+    router:
+        utf8:                   true
+        resource:               '%kernel.project_dir%/config/routing.yml'
+    default_locale:             en
+    profiler:                   { only_exceptions: false }
+
+twig:
+    debug:                      '%kernel.debug%'
+    strict_variables:           '%kernel.debug%'
+
+doctrine:
+    dbal:
+        connections:
+            default:
+                wrapper_class: "Imatic\\Testing\\Doctrine\\DBAL\\PersistedConnection"
+                url: '%env(resolve:DATABASE_URL)%'
+
+                # server_version is needed in order make the project work with dbal 2.5
+                # see: https://github.com/doctrine/DoctrineBundle/issues/351
+                server_version: '%env(DATABASE_VERSION)%'
+
+    orm:
+        auto_generate_proxy_classes: '%kernel.debug%'
+        auto_mapping:           true
+        resolve_target_entities: []
+
+monolog:
+    handlers:
+        main:
+            type: 'null'
+            process_psr_3_messages: false

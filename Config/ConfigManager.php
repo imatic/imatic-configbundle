@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Config;
 
 use Doctrine\ORM\EntityManager;
@@ -10,20 +10,18 @@ use Imatic\Bundle\ConfigBundle\Provider\ProviderInterface;
 
 class ConfigManager implements ConfigManagerInterface
 {
-    /** @var ValueTransformer */
-    private $valueTransformer;
+    private EntityManager $em;
 
-    /** @var EntityManager */
-    private $em;
+    private ValueTransformer $valueTransformer;
 
-    /** @var ConfigRepository */
-    private $repository;
+    private ConfigRepository $repository;
 
-    /** @var ProviderInterface[] */
-    private $providers = [];
+    /**
+     * @var ProviderInterface[]
+     */
+    private array $providers = [];
 
-    /** @var array */
-    private $definitions;
+    private ?array $definitions = null;
 
     /**
      * @param EntityManager $em
@@ -33,21 +31,15 @@ class ConfigManager implements ConfigManagerInterface
     {
         $this->em = $em;
         $this->valueTransformer = $valueTransformer;
-        $this->repository = $em->getRepository('ImaticConfigBundle:Config');
+        $this->repository = $em->getRepository(Config::class);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getValue($key)
+    public function getValue(string $key)
     {
         return $this->valueTransformer->reverseTransform($this->getDefinition($key), $this->getViewValue($key));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setValue($key, $value, $flush = true)
+    public function setValue(string $key, $value, bool $flush = true): self
     {
         return $this->setViewValue(
             $key,
@@ -56,10 +48,7 @@ class ConfigManager implements ConfigManagerInterface
         );
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getViewValue($key)
+    public function getViewValue(string $key)
     {
         $definition = $this->getDefinition($key);
 
@@ -70,15 +59,14 @@ class ConfigManager implements ConfigManagerInterface
         return $this->valueTransformer->transform($definition, $definition->getDefault());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function setViewValue($key, $value, $flush = true)
+    public function setViewValue(string $key, $value, bool $flush = true): self
     {
         $this->invalidateResultCache($key);
 
+        $className = $this->repository->getClassName();
+
         $this->valueTransformer->reverseTransform($this->getDefinition($key), $value);
-        $config = $this->repository->findOneByKey($key, false) ? : new Config($key);
+        $config = $this->repository->findOneByKey($key, false) ?: new $className($key);
         $config->setValue($value);
         $this->em->persist($config);
 
@@ -89,24 +77,15 @@ class ConfigManager implements ConfigManagerInterface
         return $this;
     }
 
-
-    /**
-     * @param string $key
-     */
-    protected function invalidateResultCache($key)
+    protected function invalidateResultCache(string $key)
     {
-        $this
-            ->em
+        $this->em
             ->getConfiguration()
             ->getResultCacheImpl()
-            ->delete($this->repository->getCacheKey($key))
-        ;
+            ->delete($this->repository->getCacheKey($key));
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getValues($filter = null)
+    public function getValues(?string $filter = null): array
     {
         $data = [];
 
@@ -117,17 +96,13 @@ class ConfigManager implements ConfigManagerInterface
         return $data;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getViewValues($filter = null)
+    public function getViewValues(?string $filter = null): array
     {
         $configs = $this->repository->findByFilter($filter);
         $data = [];
 
         foreach ($this->getDefinitions() as $definitions) {
             foreach ($definitions as $key => $definition) {
-                /* @var $definition Definition */
                 if ($filter === null || strpos($key, $filter) !== false) {
                     $data[$key] = isset($configs[$key])
                         ? $configs[$key]->getValue()
@@ -139,10 +114,7 @@ class ConfigManager implements ConfigManagerInterface
         return $data;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function registerProvider(ProviderInterface $provider, $name)
+    public function registerProvider(ProviderInterface $provider, string $name): self
     {
         $this->providers[$name] = $provider;
         $this->definitions = null;
@@ -150,13 +122,10 @@ class ConfigManager implements ConfigManagerInterface
         return $this;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDefinition($key)
+    public function getDefinition(string $key): Definition
     {
         $this->getDefinitions();
-        list($name,) = explode('.', $key, 2);
+        list($name) = explode('.', $key, 2);
 
         if (!isset($this->definitions[$name][$key])) {
             throw new InvalidKeyException($key);
@@ -165,10 +134,7 @@ class ConfigManager implements ConfigManagerInterface
         return $this->definitions[$name][$key];
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public function getDefinitions()
+    public function getDefinitions(): array
     {
         if ($this->definitions === null) {
             $this->definitions = [];

@@ -1,17 +1,23 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Command;
 
-use Imatic\Bundle\ConfigBundle\Config\ConfigManager;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Imatic\Bundle\ConfigBundle\Config\ConfigManagerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ConfigSetCommand extends ContainerAwareCommand
+class ConfigSetCommand extends Command
 {
-    /**
-     * {@inheritDoc}
-     */
+    private ConfigManagerInterface $configManager;
+
+    public function __construct(ConfigManagerInterface $configManager)
+    {
+        $this->configManager = $configManager;
+
+        parent::__construct();
+    }
+
     protected function configure()
     {
         $this
@@ -21,22 +27,15 @@ class ConfigSetCommand extends ContainerAwareCommand
             ->addArgument('value', InputArgument::REQUIRED);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $key = $input->getArgument('key');
         $value = $input->getArgument('value');
-        $this->getConfigManager()->setViewValue($key, $value);
-        $output->write(sprintf('Config variable <comment>%s</comment> was set to <info>%s</info>.', $key, $value));
-    }
 
-    /**
-     * @return ConfigManager
-     */
-    private function getConfigManager()
-    {
-        return $this->getContainer()->get('imatic_config.config_manager');
+        $this->configManager->setViewValue($key, $value);
+
+        $output->write(sprintf('Config variable <comment>%s</comment> was set to <info>%s</info>.', $key, $value));
+
+        return 0;
     }
 }

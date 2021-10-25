@@ -1,0 +1,7 @@
+controllers:
+    resource: ../ImaticConfigBundle/Controller/
+    type: annotation
+
+imatic_config:
+    resource: '@ImaticConfigBundle/Resources/config/routing.xml'
+    prefix: /

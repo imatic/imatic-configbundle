@@ -1,34 +1,40 @@
-<?php
+<?php declare(strict_types=1);
 namespace Imatic\Bundle\ConfigBundle\Entity;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ManagerRegistry;
 
-class ConfigRepository extends EntityRepository
+/**
+ * @method Config|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Config|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Config[]    findAll()
+ * @method Config[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
+class ConfigRepository extends ServiceEntityRepository
 {
-    /**
-     * @param string $key
-     * @param bool   $useResultCache
-     * @return Config
-     */
-    public function findOneByKey($key, $useResultCache = true)
+    public function __construct(ManagerRegistry $registry, string $entityClass)
+    {
+        parent::__construct($registry, $entityClass);
+    }
+
+    public function findOneByKey(string $key, bool $enableResultCache = true): ?Config
     {
         $query = $this->createQueryBuilder('c')
             ->where('c.key = :key')
             ->setParameter('key', $key)
             ->getQuery();
 
-        if ($useResultCache) {
-            $query->useResultCache(true, null, $this->getCacheKey($key));
+        if ($enableResultCache) {
+            $query->enableResultCache(null, $this->getCacheKey($key));
         }
 
         return $query->getOneOrNullResult();
     }
 
     /**
-     * @param string|null $filter
      * @return Config[]
      */
-    public function findByFilter($filter = null)
+    public function findByFilter(?string $filter = null): iterable
     {
         $queryBuilder = $this->_em
             ->createQueryBuilder()
@@ -38,17 +44,13 @@ class ConfigRepository extends EntityRepository
         if ($filter !== null) {
             $queryBuilder
                 ->where('c.key LIKE :pattern')
-                ->setParameter('pattern', "%{$filter}%");
+                ->setParameter('pattern', "%$filter%");
         }
 
         return $queryBuilder->getQuery()->getResult();
     }
 
-    /**
-     * @param string $key
-     * @return string
-     */
-    public function getCacheKey($key)
+    public function getCacheKey(string $key): string
     {
         return sprintf('%s.%s', $this->getClassName(), $key);
     }
