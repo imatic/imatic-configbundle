@@ -3,6 +3,7 @@ namespace Imatic\Bundle\ConfigBundle\Entity;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use function Symfony\Component\String\u;
 
 /**
  * @method Config|null find($id, $lockMode = null, $lockVersion = null)
@@ -52,6 +53,6 @@ class ConfigRepository extends ServiceEntityRepository
 
     public function getCacheKey(string $key): string
     {
-        return sprintf('%s.%s', $this->getClassName(), $key);
+        return u("{$this->getClassName()}.$key")->replace('\\', '_')->folded()->toString();
     }
 }
