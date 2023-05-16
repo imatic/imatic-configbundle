@@ -81,8 +81,8 @@ class ConfigManager implements ConfigManagerInterface
     {
         $this->em
             ->getConfiguration()
-            ->getResultCacheImpl()
-            ->delete($this->repository->getCacheKey($key));
+            ->getResultCache()
+            ->deleteItem($this->repository->getCacheKey($key));
     }
 
     public function getValues(?string $filter = null): array
